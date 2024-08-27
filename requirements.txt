@@ -1,0 +1,3 @@
+black
+isort
+pygame==2.6.0
