@@ -9,7 +9,17 @@ from player import Player
 def main():
     pygame.init()
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
-    player = Player(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2)
+
+    # Define groups
+    updatable = pygame.sprite.Group()
+    drawable = pygame.sprite.Group()
+
+    # Link objects to groups
+    Player.containers = (updatable, drawable)
+
+    #  Create objects
+    Player(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2)
+
     clock = pygame.time.Clock()
     dt = 0
 
@@ -19,12 +29,15 @@ def main():
             if event.type == pygame.QUIT:
                 return
 
-        # Draw objects
         screen.fill(pygame.Color(0, 0, 0))  # black
-        player.draw(screen)
 
-        # Update object positions
-        player.update(dt)
+        # Draw objects
+        for item in drawable:
+            item.draw(screen)
+
+        # Update objects
+        for item in drawable:
+            item.update(dt)
 
         # Rendering
         pygame.display.flip()
