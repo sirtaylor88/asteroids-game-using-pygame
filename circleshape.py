@@ -19,6 +19,10 @@ class CircleShape(pygame.sprite.Sprite):
         self.velocity = pygame.Vector2(0, 0)
         self.radius = radius
 
+    def check_collision(self, other: "CircleShape") -> bool:
+        """Check if this hitbox will collide with other one."""
+        return self.position.distance_to(other.position) < self.radius + other.radius
+
     @abstractmethod
     def draw(self, screen: pygame.Surface):
         """Sub-classes must override."""

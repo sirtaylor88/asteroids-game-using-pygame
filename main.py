@@ -24,7 +24,7 @@ def main():
     AsteroidField.containers = (updatable,)
 
     #  Create objects
-    Player(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2)
+    player = Player(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2)
     AsteroidField()
 
     clock = pygame.time.Clock()
@@ -45,6 +45,12 @@ def main():
         # Update objects
         for item in updatable:
             item.update(dt)
+
+        # Check collision
+        for item in asteroids:
+            if item.check_collision(player):
+                print("Game over!")
+                return
 
         # Rendering
         pygame.display.flip()
