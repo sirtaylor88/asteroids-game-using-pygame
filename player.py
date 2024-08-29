@@ -9,7 +9,7 @@ from constants import PLAYER_RADIUS, PLAYER_SPEED, PLAYER_TURN_SPEED
 class Player(CircleShape):
     """Define Player."""
 
-    def __init__(self, x, y) -> None:
+    def __init__(self, x: float, y: float) -> None:
         """Inits Player instance."""
         super().__init__(x, y, PLAYER_RADIUS)
         self.position = pygame.Vector2(x, y)
