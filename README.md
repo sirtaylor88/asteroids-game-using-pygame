@@ -1,9 +1,11 @@
 # 🚀 Asteroids Game
 
-> A clone of the classic Asteroids arcade game built with **Python 3.13** and **pygame**.
+> A clone of the classic [Asteroids](https://en.wikipedia.org/wiki/Asteroids_(video_game)) arcade game built with **Python 3.13** and **pygame**.
 
 ![Python](https://img.shields.io/badge/python-3.13-blue?logo=python&logoColor=white)
 ![pygame](https://img.shields.io/badge/pygame-2.6.1-green?logo=python)
+![Docker](https://img.shields.io/badge/docker-ready-blue?logo=docker&logoColor=white)
+![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white)
 ![License](https://img.shields.io/badge/license-MIT-lightgrey)
 
 ---
@@ -24,8 +26,11 @@
 Requires **Python 3.13** and [uv](https://docs.astral.sh/uv/).
 
 ```bash
-# Install dependencies
+# Install dependencies (including dev tools)
 uv sync --all-groups
+
+# Install pre-commit hooks (one-time)
+uv run pre-commit install
 
 # Run the game
 uv run main.py
@@ -35,8 +40,8 @@ uv run main.py
 
 ## Docker
 
-Requires Docker. The image sets `SDL_AUDIODRIVER=dummy` automatically; you must
-forward your X11 display so pygame can open a window.
+Requires [Docker](https://www.docker.com/). The image sets `SDL_AUDIODRIVER=dummy`
+automatically; you must forward your X11 display so pygame can open a window.
 
 ```bash
 # Build
@@ -81,35 +86,52 @@ docker run --rm \
 
 ### Code quality
 
-```bash
-uv run ruff check .          # lint (includes import sorting)
-uv run ruff format --check . # formatting
-uv run pylint *.py           # extended lint
-uv run mypy .                # type checking
-uv run bandit -r .           # security scan
-```
+| Tool | Purpose | Docs |
+|------|---------|------|
+| [ruff](https://docs.astral.sh/ruff/) | Lint + import sort | `uv run ruff check .` |
+| [pylint](https://pylint.readthedocs.io/) | Extended lint | `uv run pylint *.py` |
+| [mypy](https://mypy.readthedocs.io/) | Type checking | `uv run mypy .` |
+| [bandit](https://bandit.readthedocs.io/) | Security scan | `uv run bandit -r . -c pyproject.toml` |
+| [pydocstyle](https://www.pydocstyle.org/) | Docstring style | `uv run pydocstyle .` |
+
+All of the above run automatically on every commit via
+[pre-commit](https://pre-commit.com/) hooks (see `.pre-commit-config.yaml`).
 
 ### Tests
 
+Uses [pytest](https://docs.pytest.org/) with a headless [SDL](https://www.libsdl.org/)
+driver so no display is needed.
+
 ```bash
-uv run pytest                              # all tests
-uv run pytest tests/test_asteroid.py      # single module
-uv run pytest --cov                        # with coverage report
+uv run pytest                         # all 35 tests
+uv run pytest tests/test_asteroid.py  # single module
+uv run pytest --cov                   # with coverage report
 ```
 
 ### Documentation
 
+Built with [Sphinx](https://www.sphinx-doc.org/) using the
+[autodoc](https://www.sphinx-doc.org/en/master/usage/extensions/autodoc.html) and
+[Napoleon](https://www.sphinx-doc.org/en/master/usage/extensions/napoleon.html)
+extensions (Google-style docstrings).
+
 ```bash
-make -C docs html                                        # one-shot build
-uv run sphinx-autobuild docs/source docs/_build          # live-reload at http://127.0.0.1:8000
+make -C docs html                               # one-shot build
+uv run sphinx-autobuild docs/source docs/_build # live-reload → http://127.0.0.1:8000
 ```
 
 ---
 
 ## Documentation
 
-Full API reference and architecture notes are in the [`docs/`](docs/) directory.
-Build and open `docs/_build/index.html` in a browser after running `sphinx-build`.
+Full API reference and architecture notes live in [`docs/source/`](docs/source/).
+Build the HTML output and open `docs/_build/index.html` in a browser.
+
+| Page | Contents |
+|------|---------|
+| [Architecture](docs/source/architecture.rst) | Class hierarchy, sprite groups, game loop, splitting, Docker |
+| [API Reference](docs/source/api.rst) | Auto-generated from docstrings |
+| [Development](docs/source/development.rst) | Pre-commit hooks, tool config, testing |
 
 ---
 

@@ -5,9 +5,11 @@ Overview
 --------
 
 All game objects inherit from :class:`circleshape.CircleShape`, which extends
-``pygame.sprite.Sprite``. Each instance stores a ``position`` and ``velocity``
-(both ``pygame.Vector2``) and a ``radius`` used for circle-circle collision
-detection. Subclasses must implement :meth:`~circleshape.CircleShape.draw` and
+`pygame.sprite.Sprite <https://www.pygame.org/docs/ref/sprite.html#pygame.sprite.Sprite>`_.
+Each instance stores a ``position`` and ``velocity``
+(both `pygame.Vector2 <https://www.pygame.org/docs/ref/math.html#pygame.math.Vector2>`_)
+and a ``radius`` used for circle-circle collision detection. Subclasses must
+implement :meth:`~circleshape.CircleShape.draw` and
 :meth:`~circleshape.CircleShape.update`.
 
 .. code-block:: text
@@ -21,13 +23,22 @@ detection. Subclasses must implement :meth:`~circleshape.CircleShape.draw` and
    pygame.sprite.Sprite
    └── AsteroidField        (spawn timer; lives only in updatable group)
 
+.. seealso::
+
+   `pygame.sprite module <https://www.pygame.org/docs/ref/sprite.html>`_
+      Full reference for sprite groups and the ``Sprite`` base class.
+
+   `pygame.math.Vector2 <https://www.pygame.org/docs/ref/math.html#pygame.math.Vector2>`_
+      2-D vector used for position and velocity.
+
 Sprite Group Wiring
 -------------------
 
 ``main.py`` assigns class-level ``containers`` tuples **before** any instance is
-created. ``CircleShape.__init__`` checks ``hasattr(self, "containers")`` and, if
-present, passes those groups to ``pygame.sprite.Sprite.__init__``, automatically
-registering each new instance in the correct groups.
+created. :meth:`circleshape.CircleShape.__init__` checks ``hasattr(self, "containers")``
+and, if present, passes those groups to
+`pygame.sprite.Sprite.__init__ <https://www.pygame.org/docs/ref/sprite.html#pygame.sprite.Sprite.__init__>`_,
+automatically registering each new instance in the correct groups.
 
 Four groups are used:
 
@@ -90,3 +101,29 @@ Debug Logging
   ``game_events.jsonl``.
 
 Both files are git-ignored.
+
+Docker
+------
+
+The provided :file:`Dockerfile` builds a ``python:3.13-slim`` image with the
+SDL2 runtime libraries and installs dependencies via
+`uv <https://docs.astral.sh/uv/>`_. ``SDL_AUDIODRIVER=dummy`` is set in the
+image so no audio hardware is required.
+
+To display the game window the host's X11 socket must be forwarded:
+
+.. code-block:: bash
+
+   xhost +local:docker
+   docker run --rm \
+     -e DISPLAY=$DISPLAY \
+     -v /tmp/.X11-unix:/tmp/.X11-unix \
+     asteroids
+
+.. seealso::
+
+   `SDL2 documentation <https://wiki.libsdl.org/SDL2/FrontPage>`_
+      Reference for the underlying display and audio drivers.
+
+   `Docker documentation <https://docs.docker.com/>`_
+      Building and running container images.
