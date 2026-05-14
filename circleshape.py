@@ -8,7 +8,12 @@ import pygame
 class CircleShape(pygame.sprite.Sprite):
     """Base class for game objects."""
 
-    def __init__(self, x: float, y: float, radius: float) -> None:
+    def __init__(
+        self,
+        x: float,
+        y: float,
+        radius: float,
+    ) -> None:
         """Inits CircleShape instance."""
         if hasattr(self, "containers"):
             super().__init__(self.containers)

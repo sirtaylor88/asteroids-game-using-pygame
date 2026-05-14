@@ -20,8 +20,8 @@ class Player(CircleShape):
         """Inits Player instance."""
         super().__init__(x, y, PLAYER_RADIUS)
         self.position = pygame.Vector2(x, y)
-        self.rotation = 0
-        self.cooldown = 0
+        self.rotation: float = 0.0
+        self.cooldown: float = 0.0
 
     def triangle(self) -> list[pygame.Vector2]:
         """Draws a triangle.
@@ -57,10 +57,10 @@ class Player(CircleShape):
         self.rotation += dt * PLAYER_TURN_SPEED
 
     def update(self, dt: float) -> None:
-        """Update the rotation of player starship.
+        """Handle keyboard input and update player position, rotation, and cooldown.
 
         Args:
-            dt: Duration in seconds.
+            dt: Duration in seconds since last frame.
         """
         keys = pygame.key.get_pressed()
 
@@ -86,7 +86,10 @@ class Player(CircleShape):
         self.position += forward * PLAYER_SPEED * dt
 
     def shoot(self) -> None:
-        """Takes a shot."""
+        """Fire a shot from the player's current position in the facing direction.
+
+        Does nothing if the shoot cooldown has not expired yet.
+        """
         if self.cooldown > 0:
             return
         shot = Shot(self.position.x, self.position.y)
@@ -95,13 +98,13 @@ class Player(CircleShape):
 
 
 class Shot(CircleShape):
-    """A shot from player startship."""
+    """A projectile fired by the player ship."""
 
     def __init__(self, x: float, y: float) -> None:
         """Inits Shot instance."""
         super().__init__(x, y, SHOT_RADIUS)
         self.position = pygame.Vector2(x, y)
-        self.rotation = 0
+        self.rotation: float = 0.0
 
     def draw(self, screen: pygame.Surface) -> None:
         """Draws the shot hitbox.
@@ -118,10 +121,9 @@ class Shot(CircleShape):
         )
 
     def update(self, dt: float) -> None:
-        """Update the position of the shot.
+        """Update the position of the shot by applying its velocity.
 
         Args:
-            velocity: Speed.
-            dt: Duration in seconds.
+            dt: Duration in seconds since last frame.
         """
         self.position += self.velocity * dt

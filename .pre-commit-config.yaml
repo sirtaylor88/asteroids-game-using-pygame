@@ -1,0 +1,57 @@
+repos:
+  - repo: local
+    hooks:
+      - id: ruff
+        name: ruff (uv)
+        entry: uv run ruff check .
+        language: system
+        types: [python]
+        pass_filenames: false
+
+      - id: ruff-format
+        name: ruff format (uv)
+        entry: uv run ruff format .
+        language: system
+        types: [python]
+        pass_filenames: false
+
+      - id: pylint
+        name: pylint (uv)
+        entry: uv run pylint
+        language: system
+        types: [python]
+
+      - id: mypy
+        name: mypy (uv)
+        entry: uv run mypy .
+        language: system
+        types: [python]
+        pass_filenames: false
+
+      - id: pydocstyle
+        name: pydocstyle (uv)
+        entry: uv run pydocstyle .
+        language: system
+        types: [python]
+        pass_filenames: false
+
+      - id: bandit
+        name: bandit (uv)
+        entry: uv run bandit -r . -c pyproject.toml
+        language: system
+        types: [python]
+        pass_filenames: false
+
+      - id: sphinx-lint
+        name: sphinx-lint (uv)
+        entry: uv run sphinx-lint docs/
+        language: system
+        types: [rst, markdown]
+        pass_filenames: false
+
+      - id: pytest-cov
+        name: pytest coverage (uv)
+        entry: uv run pytest --cov --cov-report=term-missing
+        language: system
+        types: [python]
+        pass_filenames: false

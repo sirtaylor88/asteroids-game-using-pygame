@@ -1,4 +1,4 @@
-"""Constants of the game."""
+"""Numeric constants that control game behaviour and screen dimensions."""
 
 SCREEN_WIDTH = 1280
 SCREEN_HEIGHT = 720

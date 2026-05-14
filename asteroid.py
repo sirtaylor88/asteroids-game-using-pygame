@@ -11,7 +11,12 @@ from constants import ASTEROID_MIN_RADIUS
 class Asteroid(CircleShape):
     """Define Asteroid."""
 
-    def __init__(self, x: float, y: float, radius: float) -> None:
+    def __init__(
+        self,
+        x: float,
+        y: float,
+        radius: float,
+    ) -> None:
         """Inits Asteroid instance."""
         super().__init__(x, y, radius)
         self.position = pygame.Vector2(x, y)
@@ -35,15 +40,17 @@ class Asteroid(CircleShape):
         """Update the position of the asteroid.
 
         Args:
-            velocity: Speed.
-            dt: Duration in seconds.
+            dt: Duration in seconds since last frame.
         """
         self.position += self.velocity * dt
 
     def split(self) -> None:
-        """Split an asteroid to smaller ones.
+        """Destroy this asteroid and spawn two smaller ones.
 
-        If it is small enough, it will be destroyed instead.
+        If the radius is already at or below ``ASTEROID_MIN_RADIUS`` the
+        asteroid is simply destroyed with no children spawned.  Otherwise two
+        children are created at the same position with velocities rotated
+        ±20–50 ° from the parent and scaled up by 1.2×.
         """
         self.kill()
         if self.radius <= ASTEROID_MIN_RADIUS:
@@ -53,7 +60,15 @@ class Asteroid(CircleShape):
         v1 = self.velocity.rotate(random_angle)
         v2 = self.velocity.rotate(-1 * random_angle)
         new_radius = self.radius - ASTEROID_MIN_RADIUS
-        a1 = Asteroid(self.position.x, self.position.y, new_radius)
+        a1 = Asteroid(
+            self.position.x,
+            self.position.y,
+            new_radius,
+        )
         a1.velocity = v1 * 1.2
-        a2 = Asteroid(self.position.x, self.position.y, new_radius)
+        a2 = Asteroid(
+            self.position.x,
+            self.position.y,
+            new_radius,
+        )
         a2.velocity = v2 * 1.2

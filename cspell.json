@@ -1,0 +1,22 @@
+{
+  "version": "0.2",
+  "words": [
+    "asteroidfield",
+    "autobuild",
+    "circleshape",
+    "cooldown",
+    "copybutton",
+    "mypy",
+    "Nhat",
+    "pygame",
+    "pydocstyle",
+    "pylint",
+    "pytest",
+    "pyproject",
+    "pythonpath",
+    "SOURCEDIR",
+    "SPHINXBUILD",
+    "testpaths",
+    "venv"
+  ]
+}
