@@ -1,0 +1,22 @@
+{
+    "recommendations": [
+        "aaron-bond.better-comments",
+        "bierner.markdown-mermaid",
+        "charliermarsh.ruff",
+        "davidanson.vscode-markdownlint",
+        "donjayamanne.githistory",
+        "eamodio.gitlens",
+        "mikestead.dotenv",
+        "ms-python.black-formatter",
+        "ms-python.debugpy",
+        "ms-python.isort",
+        "ms-python.mypy-type-checker",
+        "ms-python.pylint",
+        "ms-python.vscode-pylance",
+        "pkief.material-icon-theme",
+        "shd101wyy.markdown-preview-enhanced",
+        "sonarsource.sonarlint-vscode",
+        "streetsidesoftware.code-spell-checker",
+        "tamasfe.even-better-toml",
+    ]
+}

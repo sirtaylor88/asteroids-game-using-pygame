@@ -11,6 +11,7 @@
 ## Table of Contents
 
 - [Getting Started](#getting-started)
+- [Docker](#docker)
 - [Controls](#controls)
 - [Gameplay](#gameplay)
 - [Development](#development)
@@ -29,6 +30,29 @@ uv sync --all-groups
 # Run the game
 uv run main.py
 ```
+
+---
+
+## Docker
+
+Requires Docker. The image sets `SDL_AUDIODRIVER=dummy` automatically; you must
+forward your X11 display so pygame can open a window.
+
+```bash
+# Build
+docker build -t asteroids .
+
+# Run (Linux with X11)
+xhost +local:docker
+docker run --rm \
+  -e DISPLAY=$DISPLAY \
+  -v /tmp/.X11-unix:/tmp/.X11-unix \
+  asteroids
+```
+
+> **macOS / Windows** — install [XQuartz](https://www.xquartz.org/) (macOS) or
+> [VcXsrv](https://sourceforge.net/projects/vcxsrv/) (Windows), start it, then
+> set `DISPLAY` accordingly before running the command above.
 
 ---
 

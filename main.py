@@ -8,8 +8,8 @@ from constants import SCREEN_HEIGHT, SCREEN_WIDTH
 from player import Player, Shot
 
 
-def main():
-    """Main method."""
+def main() -> None:
+    """Run the Asteroids game loop until the player quits or is destroyed."""
     print("Starting Asteroids")
     print("Screen width:", SCREEN_WIDTH)
     print("Screen height", SCREEN_HEIGHT)
@@ -18,23 +18,23 @@ def main():
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 
     # Define groups
-    updatable = pygame.sprite.Group()
-    drawable = pygame.sprite.Group()
-    asteroids = pygame.sprite.Group()
-    shots = pygame.sprite.Group()
+    updatable: pygame.sprite.Group = pygame.sprite.Group()
+    drawable: pygame.sprite.Group = pygame.sprite.Group()
+    asteroids: pygame.sprite.Group = pygame.sprite.Group()
+    shots: pygame.sprite.Group = pygame.sprite.Group()
 
     # Link objects to groups
-    Player.containers = (updatable, drawable)
-    Asteroid.containers = (updatable, drawable, asteroids)
-    AsteroidField.containers = (updatable,)
-    Shot.containers = (updatable, drawable, shots)
+    Player.containers = (updatable, drawable)  # type: ignore[attr-defined]
+    Asteroid.containers = (updatable, drawable, asteroids)  # type: ignore[attr-defined]
+    AsteroidField.containers = (updatable,)  # type: ignore[attr-defined]
+    Shot.containers = (updatable, drawable, shots)  # type: ignore[attr-defined]
 
     #  Create objects
     player = Player(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2)
     AsteroidField()
 
     clock = pygame.time.Clock()
-    dt = 0
+    dt: float = 0.0
 
     while True:
         dt = clock.tick(60) / 1000

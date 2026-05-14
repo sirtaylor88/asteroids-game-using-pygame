@@ -2,10 +2,12 @@
   "version": "0.2",
   "words": [
     "asteroidfield",
+    "AUDIODRIVER",
     "autobuild",
     "circleshape",
     "cooldown",
     "copybutton",
+    "libsdl",
     "mypy",
     "Nhat",
     "pygame",
@@ -17,6 +19,7 @@
     "SOURCEDIR",
     "SPHINXBUILD",
     "testpaths",
-    "venv"
+    "venv",
+    "virtualenv"
   ]
 }
