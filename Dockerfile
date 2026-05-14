@@ -16,6 +16,7 @@ RUN uv sync --no-dev --frozen
 
 # Game source
 COPY *.py ./
+COPY core/ ./core/
 
 # Use the virtualenv directly; disable audio (no hardware in container)
 ENV PATH="/app/.venv/bin:$PATH"
