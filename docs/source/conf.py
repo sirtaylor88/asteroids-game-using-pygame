@@ -30,5 +30,5 @@ html_theme_options = {
 }
 
 autodoc_member_order = "bysource"
-autodoc_typehints = "description"
+autodoc_typehints = "none"
 napoleon_google_docstring = True

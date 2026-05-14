@@ -1,38 +1,38 @@
 API Reference
 =============
 
-constants
----------
+core.constants
+--------------
 
-.. automodule:: constants
+.. automodule:: core.constants
    :members:
    :undoc-members:
 
-circleshape
------------
+core.circle\_shape
+------------------
 
-.. automodule:: circleshape
+.. automodule:: core.circle_shape
    :members:
    :show-inheritance:
 
-asteroid
---------
-
-.. automodule:: asteroid
-   :members:
-   :show-inheritance:
-
-asteroidfield
+core.asteroid
 -------------
 
-.. automodule:: asteroidfield
+.. automodule:: core.asteroid
    :members:
    :show-inheritance:
 
-player
-------
+core.asteroid\_field
+--------------------
 
-.. automodule:: player
+.. automodule:: core.asteroid_field
+   :members:
+   :show-inheritance:
+
+core.player
+-----------
+
+.. automodule:: core.player
    :members:
    :show-inheritance:
 

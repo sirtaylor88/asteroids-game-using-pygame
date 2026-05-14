@@ -7,8 +7,8 @@ from collections.abc import Generator
 import pygame
 import pytest
 
-from asteroid import Asteroid
-from constants import ASTEROID_MIN_RADIUS
+from core.asteroid import Asteroid
+from core.constants import ASTEROID_MIN_RADIUS
 
 
 @pytest.fixture()

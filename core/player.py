@@ -2,8 +2,8 @@
 
 import pygame
 
-from circleshape import CircleShape
-from constants import (
+from core.circle_shape import CircleShape
+from core.constants import (
     PLAYER_RADIUS,
     PLAYER_SHOOT_COOLDOWN,
     PLAYER_SHOOT_SPEED,
@@ -17,16 +17,23 @@ class Player(CircleShape):
     """Define Player."""
 
     def __init__(self, x: float, y: float) -> None:
-        """Inits Player instance."""
+        """Initialise the player ship at the given position.
+
+        Args:
+            x (float): Horizontal centre in pixels.
+            y (float): Vertical centre in pixels.
+        """
         super().__init__(x, y, PLAYER_RADIUS)
         self.position = pygame.Vector2(x, y)
         self.rotation: float = 0.0
         self.cooldown: float = 0.0
 
     def triangle(self) -> list[pygame.Vector2]:
-        """Draws a triangle.
+        """Compute the three vertices of the player's triangular ship.
 
-        Returns a list of 3 points of the triangle.
+        Returns:
+            list[pygame.Vector2]: Three points — nose (front) and two rear
+            corners.
         """
         forward = pygame.Vector2(0, 1).rotate(self.rotation)
         right = pygame.Vector2(0, 1).rotate(self.rotation + 90) * self.radius / 1.5
@@ -36,10 +43,10 @@ class Player(CircleShape):
         return [a, b, c]
 
     def draw(self, screen: pygame.Surface) -> None:
-        """Draws the player starship hitbox.
+        """Draw the player ship as a white triangle outline.
 
         Args:
-            screen: A pygame.Surface instance.
+            screen (pygame.Surface): The surface to draw on.
         """
         pygame.draw.polygon(
             screen,
@@ -49,10 +56,10 @@ class Player(CircleShape):
         )
 
     def rotate(self, dt: float) -> None:
-        """Rotates the player starship.
+        """Rotate the player starship.
 
         Args:
-            dt: Duration in seconds.
+            dt (float): Duration in seconds.
         """
         self.rotation += dt * PLAYER_TURN_SPEED
 
@@ -60,7 +67,7 @@ class Player(CircleShape):
         """Handle keyboard input and update player position, rotation, and cooldown.
 
         Args:
-            dt: Duration in seconds since last frame.
+            dt (float): Duration in seconds since last frame.
         """
         keys = pygame.key.get_pressed()
 
@@ -77,10 +84,10 @@ class Player(CircleShape):
         self.cooldown -= dt
 
     def move(self, dt: float) -> None:
-        """Moves the player starship.
+        """Move the player starship forward or backward.
 
         Args:
-            dt: Duration in seconds.
+            dt (float): Duration in seconds; negative values move backward.
         """
         forward = pygame.Vector2(0, 1).rotate(self.rotation)
         self.position += forward * PLAYER_SPEED * dt
@@ -101,16 +108,21 @@ class Shot(CircleShape):
     """A projectile fired by the player ship."""
 
     def __init__(self, x: float, y: float) -> None:
-        """Inits Shot instance."""
+        """Initialise a shot at the given position.
+
+        Args:
+            x (float): Horizontal centre in pixels.
+            y (float): Vertical centre in pixels.
+        """
         super().__init__(x, y, SHOT_RADIUS)
         self.position = pygame.Vector2(x, y)
         self.rotation: float = 0.0
 
     def draw(self, screen: pygame.Surface) -> None:
-        """Draws the shot hitbox.
+        """Draw the shot as a white circle outline.
 
         Args:
-            screen: A pygame.Surface instance.
+            screen (pygame.Surface): The surface to draw on.
         """
         pygame.draw.circle(
             screen,
@@ -124,6 +136,6 @@ class Shot(CircleShape):
         """Update the position of the shot by applying its velocity.
 
         Args:
-            dt: Duration in seconds since last frame.
+            dt (float): Duration in seconds since last frame.
         """
         self.position += self.velocity * dt

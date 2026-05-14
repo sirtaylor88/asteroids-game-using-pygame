@@ -17,9 +17,9 @@ class CircleShape(pygame.sprite.Sprite):
         """Initialise position, velocity, and radius; register with any containers.
 
         Args:
-            x: Horizontal centre of the circle in pixels.
-            y: Vertical centre of the circle in pixels.
-            radius: Radius of the circle in pixels.
+            x (float): Horizontal centre of the circle in pixels.
+            y (float): Vertical centre of the circle in pixels.
+            radius (float): Radius of the circle in pixels.
         """
         if hasattr(self, "containers"):
             super().__init__(self.containers)
@@ -37,10 +37,10 @@ class CircleShape(pygame.sprite.Sprite):
         so touching circles are not considered colliding).
 
         Args:
-            other: Another CircleShape to test against.
+            other (CircleShape): Another CircleShape to test against.
 
         Returns:
-            True if the circles overlap, False otherwise.
+            bool: True if the circles overlap, False otherwise.
         """
         return self.position.distance_to(other.position) < self.radius + other.radius
 
@@ -49,7 +49,7 @@ class CircleShape(pygame.sprite.Sprite):
         """Render this object onto *screen*.
 
         Args:
-            screen: The pygame Surface to draw on.
+            screen (pygame.Surface): The pygame Surface to draw on.
         """
 
     @abstractmethod
@@ -57,5 +57,5 @@ class CircleShape(pygame.sprite.Sprite):
         """Advance this object's state by one frame.
 
         Args:
-            dt: Duration in seconds since the last frame.
+            dt (float): Duration in seconds since the last frame.
         """

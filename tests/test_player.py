@@ -5,8 +5,8 @@
 import pygame
 import pytest
 
-from constants import PLAYER_SHOOT_COOLDOWN, PLAYER_SPEED, PLAYER_TURN_SPEED
-from player import Player, Shot
+from core.constants import PLAYER_SHOOT_COOLDOWN, PLAYER_SPEED, PLAYER_TURN_SPEED
+from core.player import Player, Shot
 
 
 @pytest.fixture()

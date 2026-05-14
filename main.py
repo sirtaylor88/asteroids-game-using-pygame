@@ -2,10 +2,10 @@
 
 import pygame
 
-from asteroid import Asteroid
-from asteroidfield import AsteroidField
-from constants import SCREEN_HEIGHT, SCREEN_WIDTH
-from player import Player, Shot
+from core.asteroid import Asteroid
+from core.asteroid_field import AsteroidField
+from core.constants import SCREEN_HEIGHT, SCREEN_WIDTH
+from core.player import Player, Shot
 
 
 def main() -> None:

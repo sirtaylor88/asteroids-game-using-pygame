@@ -89,7 +89,7 @@ docker run --rm \
 | Tool | Purpose | Docs |
 |------|---------|------|
 | [ruff](https://docs.astral.sh/ruff/) | Lint + import sort | `uv run ruff check .` |
-| [pylint](https://pylint.readthedocs.io/) | Extended lint | `uv run pylint *.py` |
+| [pylint](https://pylint.readthedocs.io/) | Extended lint | `uv run pylint main.py logger.py core/` |
 | [mypy](https://mypy.readthedocs.io/) | Type checking | `uv run mypy .` |
 | [bandit](https://bandit.readthedocs.io/) | Security scan | `uv run bandit -r . -c pyproject.toml` |
 | [pydocstyle](https://www.pydocstyle.org/) | Docstring style | `uv run pydocstyle .` |

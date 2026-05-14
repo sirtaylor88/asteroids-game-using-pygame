@@ -5,7 +5,7 @@
 import pygame
 import pytest
 
-from circleshape import CircleShape
+from core.circle_shape import CircleShape
 
 
 class _Shape(CircleShape):

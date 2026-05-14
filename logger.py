@@ -132,8 +132,8 @@ def log_event(event_type: str, **details: Any) -> None:
     """Append a structured event record to ``game_events.jsonl``.
 
     Args:
-        event_type: Label for the event (e.g. ``"shot_fired"``, ``"collision"``).
-        **details: Arbitrary keyword arguments merged into the event record.
+        event_type (str): Label for the event (e.g. ``"shot_fired"``, ``"collision"``).
+        **details (Any): Arbitrary keyword arguments merged into the event record.
     """
     global _event_log_initialized
 

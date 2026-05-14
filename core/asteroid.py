@@ -4,8 +4,8 @@ import random
 
 import pygame
 
-from circleshape import CircleShape
-from constants import ASTEROID_MIN_RADIUS
+from core.circle_shape import CircleShape
+from core.constants import ASTEROID_MIN_RADIUS
 
 
 class Asteroid(CircleShape):
@@ -17,16 +17,22 @@ class Asteroid(CircleShape):
         y: float,
         radius: float,
     ) -> None:
-        """Inits Asteroid instance."""
-        super().__init__(x, y, radius)
-        self.position = pygame.Vector2(x, y)
-        self.rotation = 0
-
-    def draw(self, screen: pygame.Surface) -> None:
-        """Draws the asteroid hitbox.
+        """Initialise an Asteroid at the given position with the given radius.
 
         Args:
-            screen: A pygame.Surface instance.
+            x (float): Horizontal centre in pixels.
+            y (float): Vertical centre in pixels.
+            radius (float): Circle radius in pixels.
+        """
+        super().__init__(x, y, radius)
+        self.position = pygame.Vector2(x, y)
+        self.rotation: float = 0.0
+
+    def draw(self, screen: pygame.Surface) -> None:
+        """Draw the asteroid as a white circle outline.
+
+        Args:
+            screen (pygame.Surface): The surface to draw on.
         """
         pygame.draw.circle(
             screen,
@@ -40,7 +46,7 @@ class Asteroid(CircleShape):
         """Update the position of the asteroid.
 
         Args:
-            dt: Duration in seconds since last frame.
+            dt (float): Duration in seconds since last frame.
         """
         self.position += self.velocity * dt
 

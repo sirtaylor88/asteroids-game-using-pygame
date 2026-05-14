@@ -4,13 +4,13 @@ Architecture
 Overview
 --------
 
-All game objects inherit from :class:`circleshape.CircleShape`, which extends
+All game objects inherit from :class:`core.circle_shape.CircleShape`, which extends
 `pygame.sprite.Sprite <https://www.pygame.org/docs/ref/sprite.html#pygame.sprite.Sprite>`_.
 Each instance stores a ``position`` and ``velocity``
 (both `pygame.Vector2 <https://www.pygame.org/docs/ref/math.html#pygame.math.Vector2>`_)
 and a ``radius`` used for circle-circle collision detection. Subclasses must
-implement :meth:`~circleshape.CircleShape.draw` and
-:meth:`~circleshape.CircleShape.update`.
+implement :meth:`~core.circle_shape.CircleShape.draw` and
+:meth:`~core.circle_shape.CircleShape.update`.
 
 .. code-block:: text
 
@@ -22,6 +22,22 @@ implement :meth:`~circleshape.CircleShape.draw` and
 
    pygame.sprite.Sprite
    └── AsteroidField        (spawn timer; lives only in updatable group)
+
+All five classes live in the ``core/`` package:
+
++------------------------------------+----------------------------------+
+| Module                             | Contents                         |
++====================================+==================================+
+| :mod:`core.circle_shape`           | ``CircleShape`` base class       |
++------------------------------------+----------------------------------+
+| :mod:`core.asteroid`               | ``Asteroid``                     |
++------------------------------------+----------------------------------+
+| :mod:`core.asteroid_field`         | ``AsteroidField``                |
++------------------------------------+----------------------------------+
+| :mod:`core.player`                 | ``Player``, ``Shot``             |
++------------------------------------+----------------------------------+
+| :mod:`core.constants`              | Tuneable numeric constants       |
++------------------------------------+----------------------------------+
 
 .. seealso::
 
@@ -35,8 +51,8 @@ Sprite Group Wiring
 -------------------
 
 ``main.py`` assigns class-level ``containers`` tuples **before** any instance is
-created. :meth:`circleshape.CircleShape.__init__` checks ``hasattr(self, "containers")``
-and, if present, passes those groups to
+created. :meth:`core.circle_shape.CircleShape.__init__` checks
+``hasattr(self, "containers")`` and, if present, passes those groups to
 `pygame.sprite.Sprite.__init__ <https://www.pygame.org/docs/ref/sprite.html#pygame.sprite.Sprite.__init__>`_,
 automatically registering each new instance in the correct groups.
 
@@ -72,7 +88,7 @@ All movement and timing is multiplied by ``dt`` for frame-rate independence.
 Asteroid Splitting
 ------------------
 
-When :meth:`~asteroid.Asteroid.split` is called the asteroid kills itself.
+When :meth:`~core.asteroid.Asteroid.split` is called the asteroid kills itself.
 If its radius exceeds ``ASTEROID_MIN_RADIUS``, two children are spawned at the
 same position with velocities rotated ±20–50 ° from the parent and scaled by
 **1.2×**. Minimum-size asteroids are simply destroyed.
@@ -80,15 +96,16 @@ same position with velocities rotated ±20–50 ° from the parent and scaled by
 Shooting Cooldown
 -----------------
 
-``Player.cooldown`` decrements by ``dt`` every frame. :meth:`~player.Player.shoot`
-is a no-op while ``cooldown > 0``; on success it spawns a :class:`~player.Shot`
-and resets ``cooldown`` to ``PLAYER_SHOOT_COOLDOWN``.
+``Player.cooldown`` decrements by ``dt`` every frame.
+:meth:`~core.player.Player.shoot` is a no-op while ``cooldown > 0``; on success
+it spawns a :class:`~core.player.Shot` and resets ``cooldown`` to
+``PLAYER_SHOOT_COOLDOWN``.
 
 Constants
 ---------
 
 All tuneable values (screen size, radii, speeds, rates) live in
-:mod:`constants` so they can be adjusted without touching game logic.
+:mod:`core.constants` so they can be adjusted without touching game logic.
 
 Debug Logging
 -------------

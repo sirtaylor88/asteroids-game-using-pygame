@@ -7,9 +7,9 @@ from collections.abc import Generator
 import pygame
 import pytest
 
-from asteroid import Asteroid
-from asteroidfield import AsteroidField
-from constants import ASTEROID_SPAWN_RATE
+from core.asteroid import Asteroid
+from core.asteroid_field import AsteroidField
+from core.constants import ASTEROID_SPAWN_RATE
 
 
 @pytest.fixture()
