@@ -31,6 +31,7 @@ MANIFEST
 #  before PyInstaller builds the exe, so as to inject date/other infos into it.
 *.manifest
 *.spec
+!asteroids.spec
 
 # Installer logs
 pip-log.txt
@@ -163,3 +164,4 @@ cython_debug/
 
 # logs
 game_state.jsonl
+game_events.jsonl

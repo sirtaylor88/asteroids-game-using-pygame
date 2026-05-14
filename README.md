@@ -7,6 +7,7 @@
 ![Docker](https://img.shields.io/badge/docker-ready-blue?logo=docker&logoColor=white)
 ![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white)
 ![License](https://img.shields.io/badge/license-MIT-lightgrey)
+![Build EXE](https://github.com/sirtaylor88/asteroids-game-using-pygame/actions/workflows/build-exe.yml/badge.svg)
 
 ---
 
@@ -14,6 +15,7 @@
 
 - [Getting Started](#getting-started)
 - [Docker](#docker)
+- [Windows EXE](#windows-exe)
 - [Controls](#controls)
 - [Gameplay](#gameplay)
 - [Development](#development)
@@ -58,6 +60,32 @@ docker run --rm \
 > **macOS / Windows** — install [XQuartz](https://www.xquartz.org/) (macOS) or
 > [VcXsrv](https://sourceforge.net/projects/vcxsrv/) (Windows), start it, then
 > set `DISPLAY` accordingly before running the command above.
+
+---
+
+## Windows EXE
+
+A standalone `asteroids.exe` is built automatically by GitHub Actions on every
+version tag push. Download it from the
+[Actions tab](https://github.com/sirtaylor88/asteroids-game-using-pygame/actions/workflows/build-exe.yml)
+(workflow artifact) or from the
+[Releases page](https://github.com/sirtaylor88/asteroids-game-using-pygame/releases)
+when a tag is published.
+
+To trigger a build and release manually:
+
+```bash
+git tag v1.0.0
+git push origin v1.0.0
+```
+
+To build locally on Windows (requires Python 3.13 and uv):
+
+```powershell
+uv sync --all-groups
+uv run pyinstaller asteroids.spec
+# Output: dist\asteroids.exe
+```
 
 ---
 
