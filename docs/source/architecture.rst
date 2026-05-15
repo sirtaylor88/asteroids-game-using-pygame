@@ -16,9 +16,9 @@ implement :meth:`~core.circle_shape.CircleShape.draw` and
 
    pygame.sprite.Sprite
    └── CircleShape          (position, velocity, radius, check_collision)
-       ├── Player           (rotation, cooldown, triangle rendering)
-       ├── Shot             (moves by velocity each frame)
-       └── Asteroid         (moves by velocity; splits on hit)
+       ├── Player           (rotation, cooldown, hp, invincibility, 5-point hull)
+       ├── Shot             (moves by velocity each frame; laser-bolt draw)
+       └── Asteroid         (moves and rotates; jagged polygon; splits on hit)
 
    pygame.sprite.Sprite
    └── AsteroidField        (spawn timer; lives only in updatable group)
@@ -77,13 +77,64 @@ Game Loop
 The loop in ``main.py`` runs at **60 FPS** and follows this order each tick:
 
 1. **Fill** the screen black.
-2. **Draw** every sprite in ``drawable``.
-3. **Update** every sprite in ``updatable`` (passes ``dt`` in seconds).
-4. **Collision check** — asteroid vs. player (game over) and asteroid vs. shot
-   (shot killed, asteroid split).
-5. **Flip** the display buffer.
+2. **Starfield** — 180 fixed stars at seeded-random positions drawn over the
+   black background.
+3. **Draw** every sprite in ``drawable``.
+4. **Update** every sprite in ``updatable`` (passes ``dt`` in seconds).
+5. **Collision check** — asteroid vs. player (HP reduced by damage amount;
+   game-over screen triggered when HP reaches 0) and asteroid vs. shot
+   (shot killed, asteroid split; ``destroyed`` counter incremented).
+6. **HUD** — survival timer, HP bar, and destroyed-asteroid count blit over the scene.
+7. **Flip** the display buffer.
 
 All movement and timing is multiplied by ``dt`` for frame-rate independence.
+
+Visual Style
+------------
+
+All drawing uses pygame built-in draw primitives — no external image assets.
+
+**Asteroids** are jagged grey-brown polygons. Each asteroid pre-computes 8–12
+vertices at randomised radii (65–100 % of the collision radius) and angles on
+construction. A random ``rotation_speed`` (±50 °/s) is also assigned, so every
+asteroid tumbles independently as it moves.
+
+**Player ship** is a five-point navy hull with a cyan outline, a light-blue
+cockpit dot near the nose, and an orange engine glow at the rear. Holding the
+thrust key draws a flickering orange/yellow flame triangle behind the ship.
+
+**Shots** are a bright-yellow filled circle with a short golden tail line
+trailing opposite the direction of travel.
+
+**Starfield** — 180 points at fixed seeded positions — is rendered over the
+black background each frame before game objects, providing depth without any
+animation cost.
+
+**HUD** — rendered last so it always appears on top — shows:
+
+* ``Time  MM:SS`` at the top-left.
+* HP bar (filled rect, green → yellow → red) with ``HP N/10`` label at the top-centre.
+* ``Destroyed  N`` at the top-right.
+
+Hit Points & Damage
+-------------------
+
+``Player`` starts with ``PLAYER_MAX_HP = 10`` hit points.  Each time an
+asteroid overlaps the player's circle:
+
+* A **large** asteroid (``radius > ASTEROID_MIN_RADIUS``) deals
+  ``PLAYER_HP_DAMAGE_LARGE = 3`` damage.
+* A **small** asteroid (``radius == ASTEROID_MIN_RADIUS``) deals
+  ``PLAYER_HP_DAMAGE_SMALL = 1`` damage.
+
+After taking damage :meth:`~core.player.Player.take_damage` starts a
+``PLAYER_INVINCIBILITY_DURATION = 1.5`` s invincibility window during which
+further collisions are ignored and the ship flashes at 4 Hz.
+
+When HP reaches 0 ``main.py`` calls ``_game_over_screen()``, which runs its
+own render loop: three expanding explosion rings emanate from the ship's
+position for 1.5 s while a "GAME OVER" overlay shows the final time and kill
+count.  The player can press any key to exit after 1 s.
 
 Asteroid Splitting
 ------------------

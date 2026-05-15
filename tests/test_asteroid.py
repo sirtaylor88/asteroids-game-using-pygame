@@ -1,6 +1,6 @@
 """Tests for Asteroid."""
 
-# pylint: disable=missing-function-docstring,unused-argument
+# pylint: disable=missing-function-docstring,unused-argument,protected-access
 
 from collections.abc import Generator
 
@@ -91,3 +91,21 @@ def test_update_moves_position_by_velocity_times_dt() -> None:
     asteroid.update(0.5)
     assert asteroid.position.x == pytest.approx(5.0)
     assert asteroid.position.y == pytest.approx(10.0)
+
+
+def test_asteroid_has_rotation_speed() -> None:
+    asteroid = Asteroid(0, 0, ASTEROID_MIN_RADIUS)
+    assert isinstance(asteroid.rotation_speed, float)
+
+
+def test_update_advances_rotation_by_rotation_speed_times_dt() -> None:
+    asteroid = Asteroid(0, 0, ASTEROID_MIN_RADIUS)
+    asteroid.rotation = 0.0
+    speed = asteroid.rotation_speed
+    asteroid.update(1.0)
+    assert asteroid.rotation == pytest.approx(speed * 1.0)
+
+
+def test_world_points_count_matches_vertices() -> None:
+    asteroid = Asteroid(0, 0, ASTEROID_MIN_RADIUS * 2)
+    assert len(asteroid._world_points()) == len(asteroid._vertices)

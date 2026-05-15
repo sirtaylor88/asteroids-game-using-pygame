@@ -7,7 +7,9 @@
 ![Docker](https://img.shields.io/badge/docker-ready-blue?logo=docker&logoColor=white)
 ![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white)
 ![License](https://img.shields.io/badge/license-MIT-lightgrey)
-![Build EXE](https://github.com/sirtaylor88/asteroids-game-using-pygame/actions/workflows/build-exe.yml/badge.svg)
+![Build](https://github.com/sirtaylor88/asteroids-game-using-pygame/actions/workflows/release.yml/badge.svg)
+
+![Screenshot](docs/source/_static/screenshot.png)
 
 ---
 
@@ -15,7 +17,7 @@
 
 - [Getting Started](#getting-started)
 - [Docker](#docker)
-- [Windows EXE](#windows-exe)
+- [Pre-built Executables](#pre-built-executables)
 - [Controls](#controls)
 - [Gameplay](#gameplay)
 - [Development](#development)
@@ -63,12 +65,20 @@ docker run --rm \
 
 ---
 
-## Windows EXE
+## Pre-built Executables
 
-A standalone `asteroids.exe` is built automatically by GitHub Actions on every
-version tag push. Download it from the
-[Actions tab](https://github.com/sirtaylor88/asteroids-game-using-pygame/actions/workflows/build-exe.yml)
-(workflow artifact) or from the
+Standalone executables for **Windows**, **macOS**, and **Linux** are built
+automatically by GitHub Actions on every version tag push.
+
+| Platform | Artifact | Output |
+|----------|----------|--------|
+| Windows | `asteroids-windows` | `asteroids.exe` |
+| macOS | `asteroids-macos` | `asteroids` |
+| Linux | `asteroids-linux` | `asteroids` |
+
+Download from the
+[Actions tab](https://github.com/sirtaylor88/asteroids-game-using-pygame/actions/workflows/release.yml)
+(workflow artifacts) or from the
 [Releases page](https://github.com/sirtaylor88/asteroids-game-using-pygame/releases)
 when a tag is published.
 
@@ -79,12 +89,11 @@ git tag v1.0.0
 git push origin v1.0.0
 ```
 
-To build locally on Windows (requires Python 3.13 and uv):
+To build locally (requires Python 3.13 and uv):
 
-```powershell
-uv sync --all-groups
-uv run pyinstaller asteroids.spec
-# Output: dist\asteroids.exe
+```bash
+bash scripts/build_exe.sh
+# Output: dist/asteroids  (dist/asteroids.exe on Windows)
 ```
 
 ---
@@ -103,10 +112,14 @@ uv run pyinstaller asteroids.spec
 
 ## Gameplay
 
-- Asteroids spawn continuously from the screen edges and drift inward.
+- Jagged rock-shaped asteroids spawn continuously from the screen edges, drifting and slowly rotating inward.
 - Shoot an asteroid to split it into two smaller, faster ones.
 - Small asteroids (minimum radius) are destroyed outright when shot.
-- The game ends when an asteroid collides with your ship.
+- A flickering thrust flame appears behind your ship when accelerating forward.
+- Your ship has **10 HP**. A large asteroid hit costs 3 HP; a small one costs 1 HP.
+- After taking a hit the ship is invincible for 1.5 s and flashes to signal it.
+- When HP reaches 0 an explosion plays at the ship's position and the game over screen appears.
+- The HUD shows your survival time (top-left), HP bar (top-centre), and asteroid kill count (top-right).
 
 ---
 
@@ -131,9 +144,22 @@ Uses [pytest](https://docs.pytest.org/) with a headless [SDL](https://www.libsdl
 driver so no display is needed.
 
 ```bash
-uv run pytest                         # all 35 tests
+uv run pytest                         # all 47 tests
 uv run pytest tests/test_asteroid.py  # single module
 uv run pytest --cov                   # with coverage report
+```
+
+### Scripts
+
+| Script | Purpose |
+|--------|---------|
+| `scripts/build_exe.sh` | Build a standalone executable locally (all platforms) |
+| `scripts/screenshot.py` | Render 360 frames and save `docs/source/_static/screenshot.png` |
+
+```bash
+bash scripts/build_exe.sh          # build executable
+uv run scripts/screenshot.py       # regenerate README screenshot
+uv run scripts/screenshot.py out.png  # save to a custom path
 ```
 
 ### Documentation

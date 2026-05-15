@@ -93,3 +93,68 @@ Built with `Sphinx <https://www.sphinx-doc.org/>`_ using:
 
    make -C docs html                               # one-shot build
    uv run sphinx-autobuild docs/source docs/_build # live-reload
+
+Packaging
+---------
+
+Standalone executables are produced with
+`PyInstaller <https://pyinstaller.org/>`_ using the ``asteroids.spec``
+spec file at the repository root.
+
+.. list-table::
+   :header-rows: 1
+   :widths: 20 30 50
+
+   * - Platform
+     - Artifact name
+     - Output path
+   * - Windows
+     - ``asteroids-windows``
+     - ``dist/asteroids.exe``
+   * - macOS
+     - ``asteroids-macos``
+     - ``dist/asteroids``
+   * - Linux
+     - ``asteroids-linux``
+     - ``dist/asteroids``
+
+**Local build** (any platform, requires Python 3.13 and uv):
+
+.. code-block:: bash
+
+   bash scripts/build_exe.sh
+
+The script installs ``libsdl2-dev`` automatically on Linux if it is not
+already present, syncs dependencies, and runs PyInstaller.
+
+**CI build** — the ``release`` workflow
+(``.github/workflows/release.yml``) runs three parallel jobs (one per
+platform) on every ``v*`` tag push and uploads each binary as a workflow
+artifact and a GitHub release asset.  It can also be triggered manually
+from the *Actions* tab via ``workflow_dispatch``.
+
+Scripts
+-------
+
+The ``scripts/`` directory contains two helper scripts:
+
+.. list-table::
+   :header-rows: 1
+   :widths: 35 65
+
+   * - Script
+     - Purpose
+   * - ``scripts/build_exe.sh``
+     - Build a standalone executable locally on any platform.
+       Installs ``libsdl2-dev`` on Linux if absent, syncs dependencies,
+       then runs PyInstaller.
+   * - ``scripts/screenshot.py``
+     - Render 360 frames of gameplay and save the result to
+       ``docs/source/_static/screenshot.png`` (used as the README
+       preview image).  Accepts an optional output path argument.
+
+.. code-block:: bash
+
+   bash scripts/build_exe.sh                    # build executable
+   uv run scripts/screenshot.py                 # regenerate screenshot
+   uv run scripts/screenshot.py path/to/out.png # custom output path

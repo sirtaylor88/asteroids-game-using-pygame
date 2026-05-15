@@ -1,11 +1,17 @@
 """Tests for Player and Shot."""
 
-# pylint: disable=missing-function-docstring
+# pylint: disable=missing-function-docstring,protected-access
 
 import pygame
 import pytest
 
-from core.constants import PLAYER_SHOOT_COOLDOWN, PLAYER_SPEED, PLAYER_TURN_SPEED
+from core.constants import (
+    PLAYER_INVINCIBILITY_DURATION,
+    PLAYER_MAX_HP,
+    PLAYER_SHOOT_COOLDOWN,
+    PLAYER_SPEED,
+    PLAYER_TURN_SPEED,
+)
 from core.player import Player, Shot
 
 
@@ -24,6 +30,53 @@ def test_triangle_returns_three_vector2_points(player: Player) -> None:
     assert len(points) == 3
     for p in points:
         assert isinstance(p, pygame.Vector2)
+
+
+def test_ship_points_returns_five_vector2_points(player: Player) -> None:
+    points = player._ship_points()
+    assert len(points) == 5
+    for p in points:
+        assert isinstance(p, pygame.Vector2)
+
+
+def test_thrusting_defaults_to_false(player: Player) -> None:
+    assert player.thrusting is False
+
+
+def test_hp_defaults_to_max(player: Player) -> None:
+    assert player.hp == PLAYER_MAX_HP
+
+
+def test_invincible_timer_defaults_to_zero(player: Player) -> None:
+    assert player.invincible_timer == pytest.approx(0.0)
+
+
+def test_take_damage_reduces_hp(player: Player) -> None:
+    player.take_damage(3)
+    assert player.hp == PLAYER_MAX_HP - 3
+
+
+def test_take_damage_clamps_hp_to_zero(player: Player) -> None:
+    player.take_damage(PLAYER_MAX_HP + 5)
+    assert player.hp == 0
+
+
+def test_take_damage_sets_invincibility(player: Player) -> None:
+    player.take_damage(1)
+    assert player.invincible_timer == pytest.approx(PLAYER_INVINCIBILITY_DURATION)
+
+
+def test_take_damage_blocked_when_invincible(player: Player) -> None:
+    player.take_damage(1)
+    hp_after_first = player.hp
+    player.take_damage(1)
+    assert player.hp == hp_after_first
+
+
+def test_update_decrements_invincible_timer(player: Player) -> None:
+    player.take_damage(1)
+    player.update(0.5)
+    assert player.invincible_timer == pytest.approx(PLAYER_INVINCIBILITY_DURATION - 0.5)
 
 
 def test_rotate_increases_rotation_by_turn_speed_times_dt(player: Player) -> None:
