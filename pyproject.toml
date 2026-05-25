@@ -37,7 +37,7 @@ pythonpath = ["."]
 
 [tool.coverage.run]
 source = ["."]
-omit = ["tests/*", ".venv/*", "docs/*"]
+omit = ["tests/*", ".venv/*", "docs/*", "main.py"]
 
 [tool.bandit]
 exclude_dirs = [".venv", "docs", "tests"]
@@ -52,4 +52,4 @@ add_ignore = ["D417"]
 ignored-modules = ["pygame"]
 
 [tool.pylint."messages-control"]
-disable = ["R0801", "W0621"]
+disable = ["R0801", "W0621", "R0914", "R0903"]

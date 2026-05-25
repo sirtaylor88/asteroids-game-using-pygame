@@ -1,6 +1,6 @@
 """Tests for AsteroidField."""
 
-# pylint: disable=missing-function-docstring,unused-argument
+# pylint: disable=unused-argument
 
 from collections.abc import Generator
 
@@ -28,6 +28,7 @@ def field_setup() -> Generator[tuple[AsteroidField, pygame.sprite.Group], None, 
 def test_spawn_timer_starts_at_zero(
     field_setup: tuple[AsteroidField, pygame.sprite.Group],
 ) -> None:
+    """AsteroidField initialises with spawn_timer at 0."""
     field, _ = field_setup
     assert field.spawn_timer == pytest.approx(0.0)
 
@@ -35,6 +36,7 @@ def test_spawn_timer_starts_at_zero(
 def test_update_increments_spawn_timer(
     field_setup: tuple[AsteroidField, pygame.sprite.Group],
 ) -> None:
+    """update() adds dt to spawn_timer when below the spawn rate."""
     field, _ = field_setup
     field.update(0.1)
     assert field.spawn_timer == pytest.approx(0.1)
@@ -43,6 +45,7 @@ def test_update_increments_spawn_timer(
 def test_update_below_rate_does_not_spawn(
     field_setup: tuple[AsteroidField, pygame.sprite.Group],
 ) -> None:
+    """update() does not spawn an asteroid before the timer threshold."""
     field, asteroids = field_setup
     before = len(asteroids)
     field.update(ASTEROID_SPAWN_RATE * 0.5)
@@ -52,6 +55,7 @@ def test_update_below_rate_does_not_spawn(
 def test_update_above_rate_spawns_one_asteroid(
     field_setup: tuple[AsteroidField, pygame.sprite.Group],
 ) -> None:
+    """update() spawns exactly one asteroid when spawn_timer exceeds the rate."""
     field, asteroids = field_setup
     before = len(asteroids)
     field.update(ASTEROID_SPAWN_RATE + 0.01)
@@ -61,6 +65,7 @@ def test_update_above_rate_spawns_one_asteroid(
 def test_update_resets_timer_after_spawn(
     field_setup: tuple[AsteroidField, pygame.sprite.Group],
 ) -> None:
+    """spawn_timer resets to zero after an asteroid is emitted."""
     field, _ = field_setup
     field.update(ASTEROID_SPAWN_RATE + 0.01)
     assert field.spawn_timer == pytest.approx(0.0)
@@ -69,6 +74,7 @@ def test_update_resets_timer_after_spawn(
 def test_spawn_places_asteroid_at_given_position(
     field_setup: tuple[AsteroidField, pygame.sprite.Group],
 ) -> None:
+    """spawn() creates an asteroid at the requested world position."""
     field, asteroids = field_setup
     before = len(asteroids)
     field.spawn(
@@ -85,6 +91,7 @@ def test_spawn_places_asteroid_at_given_position(
 def test_spawn_sets_asteroid_velocity(
     field_setup: tuple[AsteroidField, pygame.sprite.Group],
 ) -> None:
+    """spawn() assigns the given velocity vector to the new asteroid."""
     field, asteroids = field_setup
     field.spawn(
         20.0,

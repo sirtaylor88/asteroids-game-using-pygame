@@ -76,6 +76,7 @@ Test modules:
 * ``tests/test_asteroidfield.py`` — spawn timer, velocity, position
 * ``tests/test_player.py`` — rotation, movement, shooting cooldown, Shot
 * ``tests/test_logger.py`` — JSONL output, fps guard, max-seconds cap
+* ``tests/test_utils.py`` — rendering helpers, explosion rings, game-over screen, collision logic
 
 Documentation
 -------------

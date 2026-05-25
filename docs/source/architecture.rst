@@ -38,6 +38,8 @@ All five classes live in the ``core/`` package:
 +------------------------------------+----------------------------------+
 | :mod:`core.constants`              | Tuneable numeric constants       |
 +------------------------------------+----------------------------------+
+| :mod:`core.utils`                  | Rendering & collision helpers    |
++------------------------------------+----------------------------------+
 
 .. seealso::
 
@@ -131,8 +133,8 @@ After taking damage :meth:`~core.player.Player.take_damage` starts a
 ``PLAYER_INVINCIBILITY_DURATION = 1.5`` s invincibility window during which
 further collisions are ignored and the ship flashes at 4 Hz.
 
-When HP reaches 0 ``main.py`` calls ``_game_over_screen()``, which runs its
-own render loop: three expanding explosion rings emanate from the ship's
+When HP reaches 0 ``main.py`` calls :func:`~core.utils.game_over_screen`, which
+runs its own render loop: three expanding explosion rings emanate from the ship's
 position for 1.5 s while a "GAME OVER" overlay shows the final time and kill
 count.  The player can press any key to exit after 1 s.
 

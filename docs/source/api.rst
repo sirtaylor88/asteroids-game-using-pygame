@@ -36,6 +36,12 @@ core.player
    :members:
    :show-inheritance:
 
+core.utils
+----------
+
+.. automodule:: core.utils
+   :members:
+
 logger
 ------
 

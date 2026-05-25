@@ -20,6 +20,70 @@ _event_log_initialized = False
 _start_time = datetime.now()
 
 
+def _sprite_to_dict(sprite: Any) -> dict[str, Any]:
+    """Serialise a single sprite's observable attributes to a plain dict.
+
+    Args:
+        sprite (Any): Any object that may carry ``position``, ``velocity``,
+            ``radius``, or ``rotation`` attributes.
+
+    Returns:
+        dict[str, Any]: Mapping of attribute name to rounded value.
+    """
+    info: dict[str, Any] = {"type": sprite.__class__.__name__}
+    if hasattr(sprite, "position"):
+        info["pos"] = [round(sprite.position.x, 2), round(sprite.position.y, 2)]
+    if hasattr(sprite, "velocity"):
+        info["vel"] = [round(sprite.velocity.x, 2), round(sprite.velocity.y, 2)]
+    if hasattr(sprite, "radius"):
+        info["rad"] = sprite.radius
+    if hasattr(sprite, "rotation"):
+        info["rot"] = round(sprite.rotation, 2)
+    return info
+
+
+def _group_to_entry(group: Any) -> dict[str, Any]:
+    """Serialise a sprite Group into a count + sampled sprites list.
+
+    Args:
+        group (Any): A pygame sprite Group (or compatible iterable).
+
+    Returns:
+        dict[str, Any]: ``{"count": int, "sprites": list}`` entry.
+    """
+    sprites_data = []
+    for i, sprite in enumerate(group):
+        if i >= _SPRITE_SAMPLE_LIMIT:
+            break
+        sprites_data.append(_sprite_to_dict(sprite))
+    return {"count": len(group), "sprites": sprites_data}
+
+
+def _scan_locals(
+    local_vars: dict[str, Any],
+) -> tuple[list[Any], dict[str, Any]]:
+    """Extract screen size and sprite data from a caller's local variables.
+
+    Args:
+        local_vars (dict[str, Any]): A copy of ``frame.f_back.f_locals``.
+
+    Returns:
+        tuple[list[Any], dict[str, Any]]: ``(screen_size, game_state)`` where
+        ``screen_size`` is ``[w, h]`` if a Surface was found (else ``[]``) and
+        ``game_state`` maps variable names to serialised sprite data.
+    """
+    screen_size: list[Any] = []
+    game_state: dict[str, Any] = {}
+    for key, value in local_vars.items():
+        if "pygame" in str(type(value)) and hasattr(value, "get_size"):
+            screen_size = list(value.get_size())
+        if hasattr(value, "__class__") and "Group" in value.__class__.__name__:
+            game_state[key] = _group_to_entry(value)
+        if len(game_state) == 0 and hasattr(value, "position"):
+            game_state[key] = _sprite_to_dict(value)
+    return screen_size, game_state
+
+
 def log_state() -> None:
     """Snapshot caller's game state to ``game_state.jsonl`` once per second.
 
@@ -28,14 +92,11 @@ def log_state() -> None:
     ``rotation`` attributes.  Stops logging after ``_MAX_SECONDS`` seconds.
     Must be called from inside the game loop (uses ``inspect.currentframe``).
     """
-    # pylint: disable=too-many-branches
     global _frame_count, _state_log_initialized
 
-    # Stop logging after `_MAX_SECONDS` seconds
     if _frame_count > _FPS * _MAX_SECONDS:
         return
 
-    # Take a snapshot approx. once per second
     _frame_count += 1
     if _frame_count % _FPS != 0:
         return
@@ -50,67 +111,7 @@ def log_state() -> None:
     if frame_back is None:
         return
 
-    local_vars = frame_back.f_locals.copy()
-
-    screen_size = []
-    game_state = {}
-
-    for key, value in local_vars.items():
-        if "pygame" in str(type(value)) and hasattr(value, "get_size"):
-            screen_size = value.get_size()
-
-        if hasattr(value, "__class__") and "Group" in value.__class__.__name__:
-            sprites_data = []
-
-            for i, sprite in enumerate(value):
-                if i >= _SPRITE_SAMPLE_LIMIT:
-                    break
-
-                sprite_info = {"type": sprite.__class__.__name__}
-
-                if hasattr(sprite, "position"):
-                    sprite_info["pos"] = [
-                        round(sprite.position.x, 2),
-                        round(sprite.position.y, 2),
-                    ]
-
-                if hasattr(sprite, "velocity"):
-                    sprite_info["vel"] = [
-                        round(sprite.velocity.x, 2),
-                        round(sprite.velocity.y, 2),
-                    ]
-
-                if hasattr(sprite, "radius"):
-                    sprite_info["rad"] = sprite.radius
-
-                if hasattr(sprite, "rotation"):
-                    sprite_info["rot"] = round(sprite.rotation, 2)
-
-                sprites_data.append(sprite_info)
-
-            game_state[key] = {"count": len(value), "sprites": sprites_data}
-
-        if len(game_state) == 0 and hasattr(value, "position"):
-            sprite_info = {"type": value.__class__.__name__}
-
-            sprite_info["pos"] = [
-                round(value.position.x, 2),
-                round(value.position.y, 2),
-            ]
-
-            if hasattr(value, "velocity"):
-                sprite_info["vel"] = [
-                    round(value.velocity.x, 2),
-                    round(value.velocity.y, 2),
-                ]
-
-            if hasattr(value, "radius"):
-                sprite_info["rad"] = value.radius
-
-            if hasattr(value, "rotation"):
-                sprite_info["rot"] = round(value.rotation, 2)
-
-            game_state[key] = sprite_info
+    screen_size, game_state = _scan_locals(frame_back.f_locals.copy())
 
     entry = {
         "timestamp": now.strftime("%H:%M:%S.%f")[:-3],
@@ -120,7 +121,6 @@ def log_state() -> None:
         **game_state,
     }
 
-    # New log file on each run
     mode = "w" if not _state_log_initialized else "a"
     with open("game_state.jsonl", mode, encoding="utf-8") as f:
         f.write(json.dumps(entry) + "\n")
