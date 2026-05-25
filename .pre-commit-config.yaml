@@ -51,7 +51,7 @@ repos:
 
       - id: pytest-cov
         name: pytest coverage (uv)
-        entry: uv run pytest --cov --cov-report=term-missing
+        entry: uv run pytest --cov --cov-report=term-missing --cov-fail-under=100
         language: system
         types: [python]
         pass_filenames: false
